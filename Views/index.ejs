@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="repcheckr">
+<head>
+    <title>Movie watcher</title>
+    <%include includesTop.ejs%>
+</head>
+<body>
+<div class="right">
+    <input type="text" name="txtMovie" placeholder="Movie..."/>
+    <button id="btnSearch" class="btn-success">Search</button>
+    <button id="btnNext" class="btn-warning">Next link</button>
+</div>
+<div class="page-header">
+    <h1>Movie watcher<small> genoeg gezever</small></h1>
+
+</div>
+<iframe id="frmMovie"></iframe>
+<div id="movieList" class="container">
+
+</div>
+
+<%include includesBottom.ejs%>
+</body>
+</html>

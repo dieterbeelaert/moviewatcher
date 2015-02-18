@@ -1,0 +1,11 @@
+.left{
+    float:left;
+}
+.right{
+    float:right;
+    clear:right;
+}
+
+.spacer{
+    height:5px;
+}

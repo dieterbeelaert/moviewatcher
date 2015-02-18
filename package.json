@@ -1,0 +1,11 @@
+{
+    "name": "Moviewatcher",
+    "version": "0.0.1",
+    "dependencies": {
+        "fs": "*",
+        "jsdom": "*",
+        "express":"*",
+        "ejs":"*",
+        "body-parser":"*"
+    }
+}
