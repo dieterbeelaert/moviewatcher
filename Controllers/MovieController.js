@@ -80,42 +80,72 @@ MovieController.prototype.doLinks = function(){
         function(errors, window){
             $ = window.jQuery;
             var toReturn = [];
-            $('.movie_version').each(function(){
-                //check of not sponsored link
-                var host = $(this).find('.version_host').text()
-                if(host.indexOf('Promo Host') === -1 && host.indexOf('Sponsor Host') === -1) {
-                    var movie = {};
-                    movie.url = 'http://www.primewire.ag' + $(this).find('a').attr('href');
-                    var score = $(this).find('.current-rating').text();
-                    score = score.replace(/Currently |\/5/gi, '');
-                    var votes = $(this).find('.voted').text();
-                    movie.votes = votes.replace(/\(|\)| votes| vote/gi,'');
-                    movie.host = host.replace(/document.writeln\(\'|\'\);/gi,'');
-                    movie.score = score;
-                    console.log(movie);
-                    toReturn.push(movie);
-                }
-            });
-            //sort by score
-            toReturn.sort(function(a,b){
-                if(a.score > b.score) {
-                    return -1;
-                }else if(a.score < b.score) {
-                    return 1;
-                } else {
-                    //equal score order by votes
-                    if(a.votes > b.votes){
+            if($('.tv_container').length === 0) {
+                $('.movie_version').each(function () {
+                    //check of not sponsored link
+                    var host = $(this).find('.version_host').text()
+                    if (host.indexOf('Promo Host') === -1 && host.indexOf('Sponsor Host') === -1) {
+                        var movie = {};
+                        movie.url = 'http://www.primewire.ag' + $(this).find('a').attr('href');
+                        var score = $(this).find('.current-rating').text();
+                        score = score.replace(/Currently |\/5/gi, '');
+                        var votes = $(this).find('.voted').text();
+                        movie.votes = votes.replace(/\(|\)| votes| vote/gi, '');
+                        movie.host = host.replace(/document.writeln\(\'|\'\);/gi, '');
+                        movie.score = score;
+                        console.log(movie);
+                        toReturn.push(movie);
+                    }
+                });
+                //sort by score
+                toReturn.sort(function (a, b) {
+                    if (a.score > b.score) {
                         return -1;
-                    } else if(a.votes < b.votes){
+                    } else if (a.score < b.score) {
                         return 1;
                     } else {
-                        //equal score and votes
-                        return 0;
+                        //equal score order by votes
+                        if (a.votes > b.votes) {
+                            return -1;
+                        } else if (a.votes < b.votes) {
+                            return 1;
+                        } else {
+                            //equal score and votes
+                            return 0;
+                        }
                     }
-                }
 
-            });
-            self.prototype.returnJSON(toReturn);
+                });
+                self.prototype.returnJSON(toReturn);
+            }else{
+                //tv show get seasons and series...
+                self.getEpisodes($);
+            }
         }
     );
+}
+
+
+MovieController.prototype.getEpisodes = function($){
+    var self = this;
+    var toReturn = [];
+    var seasons = $('div.show_season');
+    seasons.each(function(){
+        var season = {};
+        season.season = $(this).attr('data-id');
+        season.episodes = [];
+        $(this).find('.tv_episode_item').each(function(){
+            var episode = {};
+            episode.url = $(this).find('a').attr('href');
+            episode.number = $(this).find('a').text();
+            episode.number = episode.number.match(/E[0-9]+/)[0];
+            episode.name = $(this).find('.tv_episode_name').text();
+            episode.name = episode.name.replace(' - ','');
+            episode.airdate = $(this).find('.tv_episode_airdate').text();
+            episode.airdate = episode.airdate.replace(' - ','');
+            season.episodes.push(episode);
+        });
+        toReturn.push(season);
+    });
+    self.prototype.returnJSON(toReturn);
 }
