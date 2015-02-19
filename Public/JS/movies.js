@@ -16,6 +16,7 @@ function init(){
     $(document).on('click', '#btnSearch',doSearch);
     $(document).on('click', '.movieItem', getMovieLinks);
     $(document).on('click','#btnNext',nextMovie);
+    $(document).on('keyup','input[name=txtMovie]',submitSearch);
 }
 
 function doSearch(){
@@ -33,6 +34,13 @@ function doSearch(){
         $('input[name=txtMovie]').val('');
     }else {
         alert('please type a query');
+    }
+}
+
+function submitSearch(e){
+    var code = e.keyCode || e.which;
+    if(code === 13){
+        doSearch();
     }
 }
 
