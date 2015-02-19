@@ -70,17 +70,17 @@ function cleanupLinks(links){
 }
 
 MovieController.prototype.doLinks = function(){
-    //TODO check if it's a serie or a movie, if serie select episodes ... else execute normaly
     var self = this;
-    console.log('links');
     var url = 'http://www.primewire.ag/' + self.prototype.ctx.routeObj.id;
+    url += self.prototype.ctx.routeObj.extra !== undefined ? '/' + self.prototype.ctx.routeObj.extra : '';
     jsdom.env(
         url,
         ["http://code.jquery.com/jquery.js"],
         function(errors, window){
             $ = window.jQuery;
-            var toReturn = [];
+            var toReturn = {type:'links', links : []};
             if($('.tv_container').length === 0) {
+                console.log('movie link ....');
                 $('.movie_version').each(function () {
                     //check of not sponsored link
                     var host = $(this).find('.version_host').text()
@@ -93,12 +93,11 @@ MovieController.prototype.doLinks = function(){
                         movie.votes = votes.replace(/\(|\)| votes| vote/gi, '');
                         movie.host = host.replace(/document.writeln\(\'|\'\);/gi, '');
                         movie.score = score;
-                        console.log(movie);
-                        toReturn.push(movie);
+                        toReturn.links.push(movie);
                     }
                 });
                 //sort by score
-                toReturn.sort(function (a, b) {
+                toReturn.links.sort(function (a, b) {
                     if (a.score > b.score) {
                         return -1;
                     } else if (a.score < b.score) {
@@ -128,7 +127,7 @@ MovieController.prototype.doLinks = function(){
 
 MovieController.prototype.getEpisodes = function($){
     var self = this;
-    var toReturn = [];
+    var toReturn = {type:'episodes',seasons:[]};
     var seasons = $('div.show_season');
     seasons.each(function(){
         var season = {};
@@ -145,7 +144,7 @@ MovieController.prototype.getEpisodes = function($){
             episode.airdate = episode.airdate.replace(' - ','');
             season.episodes.push(episode);
         });
-        toReturn.push(season);
+        toReturn.seasons.push(season);
     });
     self.prototype.returnJSON(toReturn);
 }

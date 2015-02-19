@@ -66,18 +66,47 @@ function showMovies(json){
 
 function getMovieLinks(){
     var id = $(this).attr('movieId');
+    console.log(id);
     $('#movieList').hide();
     $.ajax({
         url:'/movie/links' + id,
         success:function(json){
-            links = JSON.parse(json);
-            console.log(links);
-            startMovie(0);
+            //series or movie?
+            json = JSON.parse(json);
+            console.log(json);
+            if(json.type === 'links'){
+                links = json.links;
+                startMovie(0);
+            }else if(json.type === 'episodes'){
+                console.log(json.seasons);
+                displayEpisodes(json.seasons);
+            }
+
         },
         error: function(err){
             console.log(err)
         }
     });
+}
+
+function displayEpisodes(seasons){
+    $('#frmMovie').hide();
+    $('#movieList').html('');
+    var toAppend = ''
+    for(var s = 0 ;  s < seasons.length; s++){
+        toAppend += '<h2>Season ' + seasons[s].season + '</h2>';
+        toAppend += '<ul>';
+        for(var e = 0; e < seasons[s].episodes.length; e++){
+            var id = seasons[s].episodes[e].url;
+            toAppend += '<li>' + seasons[s].episodes[e].number;
+            toAppend += ' <a href="#" class="movieItem" movieId="' + id +'">';
+            toAppend += seasons[s].episodes[e].name + ' ';
+            toAppend += '<small> ' + seasons[s].episodes[e].airdate + '</small></a></li>';
+        }
+        toAppend +='</ul>';
+    }
+    $('#movieList').append(toAppend);
+    $('#movieList').show();
 }
 
 function startMovie(index){

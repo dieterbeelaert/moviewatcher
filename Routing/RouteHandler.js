@@ -31,7 +31,7 @@ module.exports.routeRequest = routeRequest;
 
 
 function parsePath(path,callback){
-    var names = ["controller","action","id"];
+    var names = ["controller","action","id","extra"];
     var splitted = path.split("/");
     var routeObj = {};
     for(var i = 1; i < splitted.length; i++){
