@@ -4,8 +4,12 @@
     "dependencies": {
         "fs": "*",
         "jsdom": "*",
-        "express":"*",
-        "ejs":"*",
-        "body-parser":"*"
-    }
+        "express": "*",
+        "ejs": "*",
+        "body-parser": "*"
+    },
+    "scripts": {
+        "start": "node server.js"
+    },
+    "main": "server.js"
 }
