@@ -87,22 +87,33 @@ MovieController.prototype.doLinks = function(){
                     var movie = {};
                     movie.url = 'http://www.primewire.ag' + $(this).find('a').attr('href');
                     var score = $(this).find('.current-rating').text();
-                    console.log(score);
                     score = score.replace(/Currently |\/5/gi, '');
-                    movie.host = host;
+                    var votes = $(this).find('.voted').text();
+                    movie.votes = votes.replace(/\(|\)| votes| vote/gi,'');
+                    movie.host = host.replace(/document.writeln\(\'|\'\);/gi,'');
                     movie.score = score;
                     console.log(movie);
                     toReturn.push(movie);
                 }
             });
             //sort by score
-            //TODO also sort by number of votes when there is a tie
             toReturn.sort(function(a,b){
-                if(a.score > b.score)
+                if(a.score > b.score) {
                     return -1;
-                if(a.score < b.score)
+                }else if(a.score < b.score) {
                     return 1;
-                return 0;
+                } else {
+                    //equal score order by votes
+                    if(a.votes > b.votes){
+                        return -1;
+                    } else if(a.votes < b.votes){
+                        return 1;
+                    } else {
+                        //equal score and votes
+                        return 0;
+                    }
+                }
+
             });
             self.prototype.returnJSON(toReturn);
         }
