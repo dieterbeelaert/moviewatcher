@@ -9,3 +9,8 @@
 .spacer{
     height:5px;
 }
+
+.page-header,
+.right{
+    margin:15px;
+}
