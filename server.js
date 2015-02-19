@@ -16,3 +16,4 @@ server.all('*',function(req,res){
 });
 
 server.listen(settings.port);
+ //run it on openshift https://github.com/openshift-quickstart/openshift-mongo-node-express-example/blob/master/server.js
