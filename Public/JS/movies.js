@@ -95,10 +95,10 @@ function displayEpisodes(seasons){
     var toAppend = ''
     for(var s = 0 ;  s < seasons.length; s++){
         toAppend += '<h2>Season ' + seasons[s].season + '</h2>';
-        toAppend += '<ul>';
+        toAppend += '<ul class="list-group">';
         for(var e = 0; e < seasons[s].episodes.length; e++){
             var id = seasons[s].episodes[e].url;
-            toAppend += '<li>' + seasons[s].episodes[e].number;
+            toAppend += '<li class="list-group-item">' + seasons[s].episodes[e].number;
             toAppend += ' <a href="#" class="movieItem" movieId="' + id +'">';
             toAppend += seasons[s].episodes[e].name + ' ';
             toAppend += '<small> ' + seasons[s].episodes[e].airdate + '</small></a></li>';
