@@ -39,6 +39,13 @@ body{
     overflow-y: auto;
 }
 
+#movieList > div{
+    margin-bottom:25px
+}
+
+#movieList img {
+    border-radius:4px;
+}
 
 @media only screen
 and (max-width : 480px) {
