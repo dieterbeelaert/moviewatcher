@@ -6,6 +6,7 @@ var links = [];
 var linkIndex = 0;
 
 $(document).ready(function(){
+    alert("hello world");
     init();
 });
 
