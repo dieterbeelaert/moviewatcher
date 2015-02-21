@@ -16,8 +16,8 @@ function init(){
     $(document).on('click', '.movieItem', getMovieLinks);
     $(document).on('click','#btnNext',nextMovie);
     $(document).on('keyup','input[name=txtMovie]',submitSearch);
-    setIframeSize();
-    $(window).resize(setIframeSize);
+    setSize();
+    $(window).resize(setSize);
 }
 
 function doSearch(){
@@ -136,7 +136,8 @@ function showLoading(show){
     }
 }
 
-function setIframeSize(){
+function setSize(){
     $('#frmMovie')[0].setAttribute('width',$(window).width());
     $('#frmMovie')[0].setAttribute('height',$(window).height());
+    $('#movieList').css('height', $(window).height());
 }
