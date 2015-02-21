@@ -6,13 +6,25 @@
     <%include includesTop.ejs%>
 </head>
 <body>
-<div class="right">
-    <input type="text" name="txtMovie" placeholder="Movie..."/>
-    <button id="btnSearch" class="btn-success">Search</button>
-    <button id="btnNext" class="btn-warning">Next link</button>
-</div>
+
 <div class="page-header">
     <h1>Movie watcher<small> genoeg gezever</small></h1>
+
+    <div class="input-group col-lg-12">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            Search
+        </button>
+      </span>
+        <input type="text" name="txtMovie" class="form-control" placeholder="Movie/Series..."/>
+
+      <span class="input-group-btn">
+           <button type="button" id="btnNext" class="btn btn-default btn-default" aria-label="Left Align">
+               <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span> Next link
+           </button>
+      </span>
+    </div>
 </div>
 
 <iframe id="frmMovie"></iframe>

@@ -1,8 +1,12 @@
+body{
+    background:url("../images/bg.jpg");
+}
+
 .left{
     float:left;
 }
 .right{
-    float:right;
+    float:right !important;
     clear:right;
 }
 
@@ -30,7 +34,7 @@
 
 @media only screen
 and (max-width : 480px) {
-    .page-header{display:none;}
+    .page-header h1{display:none;}
     .right{float:none;}
 }
 
