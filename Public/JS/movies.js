@@ -12,12 +12,12 @@ $(document).ready(function(){
 function init(){
     $('#frmMovie').hide();
     $("#loading").hide();
-    $('#frmMovie')[0].setAttribute('width',$(window).width());
-    $('#frmMovie')[0].setAttribute('height',$(window).height());
     $(document).on('click', '#btnSearch',doSearch);
     $(document).on('click', '.movieItem', getMovieLinks);
     $(document).on('click','#btnNext',nextMovie);
     $(document).on('keyup','input[name=txtMovie]',submitSearch);
+    setIframeSize();
+    $(window).resize(setIframeSize);
 }
 
 function doSearch(){
@@ -134,4 +134,9 @@ function showLoading(show){
     }else{
         $("#loading").hide();
     }
+}
+
+function setIframeSize(){
+    $('#frmMovie')[0].setAttribute('width',$(window).width());
+    $('#frmMovie')[0].setAttribute('height',$(window).height());
 }
