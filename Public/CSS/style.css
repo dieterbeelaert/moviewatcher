@@ -19,6 +19,10 @@ body{
     margin:15px;
 }
 
+.page-header {
+    font-family: 'Pacifico', cursive;
+}
+
 #loading{
     width:24px;
     height:24px;
