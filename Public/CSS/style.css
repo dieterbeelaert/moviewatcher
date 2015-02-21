@@ -6,8 +6,8 @@
     clear:right;
 }
 
-.spacer{
-    height:5px;
+.movieHolder{
+    height:25px;
 }
 
 .page-header,
@@ -25,4 +25,16 @@
     right: 0;
 
     margin: auto;
+}
+
+
+@media only screen
+and (max-width : 480px) {
+    .page-header{display:none;}
+    .right{float:none;}
+}
+
+@media only screen
+and (max-width: 760px){
+    .page-header small{display:none;}
 }

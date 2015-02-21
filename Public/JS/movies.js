@@ -24,6 +24,7 @@ function doSearch(){
     var txt = $('input[name=txtMovie]').val();
     if(txt != '') {
         showLoading(true);
+        $('#movieList').hide();
         $.ajax({
             url: '/movie/search/' + txt,
             success: function(json){
@@ -50,25 +51,15 @@ function showMovies(json){
     $('#frmMovie').hide(400);
     $('#movieList').hide();
     $('#movieList').html('');
-    var itemsInRow = 0
     for(var i = 0; i < json.length; i++){
-        var toAppend = '';
-        if(itemsInRow === 3){
-            toAppend += '<div class="row">'
-        }
-
-        toAppend = '<div class="col-md-2 col-sm-2">';
+        var toAppend = '<div clas="row">';
+        toAppend = '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
         var id = json[i].link+'';
         id = id.replace('http://www.primewire.ag','');
         toAppend += '<a href="#" movieId="' + id + '" class="movieItem">'
         toAppend += '<img src="' + json[i].image + '"/></a>';
         toAppend += '</div>';
-        if(itemsInRow === 3){
-            toAppend+= '</div><div class="spacer"></div>'
-            itemsInrow = 0;
-        }else{
-            itemsInRow++;
-        }
+        toAppend+='</div>';
         $('#movieList').append(toAppend);
         showLoading(false);
         $('#movieList').show(400);
