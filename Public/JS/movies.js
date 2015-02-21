@@ -11,6 +11,7 @@ $(document).ready(function(){
 
 function init(){
     $('#frmMovie').hide();
+    $("#loading").hide();
     $('#frmMovie')[0].setAttribute('width',$(window).width());
     $('#frmMovie')[0].setAttribute('height',$(window).height());
     $(document).on('click', '#btnSearch',doSearch);
@@ -22,6 +23,7 @@ function init(){
 function doSearch(){
     var txt = $('input[name=txtMovie]').val();
     if(txt != '') {
+        showLoading(true);
         $.ajax({
             url: '/movie/search/' + txt,
             success: function(json){
@@ -68,6 +70,7 @@ function showMovies(json){
             itemsInRow++;
         }
         $('#movieList').append(toAppend);
+        showLoading(false);
         $('#movieList').show(400);
     }
 }
@@ -76,6 +79,7 @@ function getMovieLinks(){
     var id = $(this).attr('movieId');
     console.log(id);
     $('#movieList').hide();
+    showLoading(true);
     $.ajax({
         url:'/movie/links' + id,
         success:function(json){
@@ -114,11 +118,13 @@ function displayEpisodes(seasons){
         toAppend +='</ul>';
     }
     $('#movieList').append(toAppend);
+    showLoading(false);
     $('#movieList').show();
 }
 
 function startMovie(index){
     linkIndex = index;
+    showLoading(false);
     $('#frmMovie').show();
     $('#frmMovie')[0].setAttribute('src',links[linkIndex].url);
 }
@@ -128,5 +134,13 @@ function nextMovie(){
         startMovie(linkIndex + 1);
     }else{
         alert('Ran out of links, I am so sorry');
+    }
+}
+
+function showLoading(show){
+    if(show){
+        $("#loading").show();
+    }else{
+        $("#loading").hide();
     }
 }
