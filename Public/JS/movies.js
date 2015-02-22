@@ -5,6 +5,7 @@
 var links = [];
 var linkIndex = 0;
 
+
 $(document).ready(function(){
     init();
 });
@@ -18,10 +19,20 @@ function init(){
     $(document).on('keyup','input[name=txtMovie]',submitSearch);
     setSize();
     $(window).resize(setSize);
+    checkQueryString();
 }
 
-function doSearch(){
-    var txt = $('input[name=txtMovie]').val();
+function doSearch(query){
+    //get the correct value and assign it to query string
+    var txt;
+    if(query != undefined){
+        txt = query;
+    } else{
+        txt = $('input[name=txtMovie]').val();
+        setQueryString('search', txt);
+    }
+
+
     if(txt != '') {
         showLoading(true);
         $('#movieList').hide();
@@ -66,9 +77,20 @@ function showMovies(json){
     }
 }
 
-function getMovieLinks(){
-    var id = $(this).attr('movieId');
-    console.log(id);
+function getMovieLinks(movieId){
+
+    //check if this is called from query string or from clickhandler
+    var id;
+    if(movieId != undefined && typeof movieId !== 'object'){
+        id = '/'+ movieId;
+    }else{
+        console.log('movieId is undefined');
+        id = $(this).attr('movieId');
+        var val = id.replace('/','');
+        val = val.replace('/','-');
+        setQueryString('id',val );
+    }
+
     $('#movieList').hide();
     showLoading(true);
     $.ajax({
@@ -140,4 +162,26 @@ function setSize(){
     $('#frmMovie')[0].setAttribute('width',$(window).width());
     $('#frmMovie')[0].setAttribute('height',$(window).height());
     $('#movieList').css('height', $(window).height());
+}
+
+function checkQueryString(){
+    var url =window.location.href;
+    if(url.indexOf('?') !== -1) {
+        var queryString = url.split('?')[1];
+        var keys = queryString.match(/[a-z]*=/gi);
+        var values = queryString.match(/=[a-z\-[0-9]*]*/gi);
+        for(var i = 0; i < keys.length; i++){
+            key = keys[i].replace('=','');
+            switch(key.toUpperCase()){
+                case 'SEARCH': doSearch(values[i].replace('=',''));
+                    break;
+                case 'ID': getMovieLinks(values[i].replace('=',''));
+                    break;
+            }
+        }
+    }
+}
+
+function setQueryString(key,value){
+    window.history.pushState(null,'','?' + key +'=' + value);
 }

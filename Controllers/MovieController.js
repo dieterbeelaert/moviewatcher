@@ -71,7 +71,8 @@ function cleanupLinks(links){
 
 MovieController.prototype.doLinks = function(){
     var self = this;
-    var url = 'http://www.primewire.ag/' + self.prototype.ctx.routeObj.id;
+    var id = self.reformatIdToUrl(self.prototype.ctx.routeObj.id);
+    var url = 'http://www.primewire.ag/' + id;
     url += self.prototype.ctx.routeObj.extra !== undefined ? '/' + self.prototype.ctx.routeObj.extra : '';
     jsdom.env(
         url,
@@ -147,4 +148,8 @@ MovieController.prototype.getEpisodes = function($){
         toReturn.seasons.push(season);
     });
     self.prototype.returnJSON(toReturn);
+}
+
+MovieController.prototype.reformatIdToUrl = function(id){
+        return id.replace('-season','/season');
 }
