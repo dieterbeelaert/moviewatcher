@@ -62,18 +62,24 @@ function showMovies(json){
     $('#frmMovie').hide(400);
     $('#movieList').hide();
     $('#movieList').html('');
-    for(var i = 0; i < json.length; i++){
-        var toAppend = '<div clas="row">';
-        toAppend = '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
-        var id = json[i].link+'';
-        id = id.replace('http://www.primewire.ag','');
-        toAppend += '<a href="#" movieId="' + id + '" class="movieItem">'
-        toAppend += '<img src="' + json[i].image + '"/></a>';
-        toAppend += '</div>';
-        toAppend+='</div>';
-        $('#movieList').append(toAppend);
+    console.log(json.length + ' is the length of the results');
+    if(json.length > 0) {
+        for (var i = 0; i < json.length; i++) {
+            var toAppend = '<div clas="row">';
+            toAppend = '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
+            var id = json[i].link + '';
+            id = id.replace('http://www.primewire.ag', '');
+            toAppend += '<a href="#" movieId="' + id + '" class="movieItem">'
+            toAppend += '<img src="' + json[i].image + '"/></a>';
+            toAppend += '</div>';
+            toAppend += '</div>';
+            $('#movieList').append(toAppend);
+            showLoading(false);
+            $('#movieList').show(400);
+        }
+    } else{
+        $('#movieList').html('<h2>Nothing found, please try again</h2>').show(400);
         showLoading(false);
-        $('#movieList').show(400);
     }
 }
 
@@ -138,8 +144,12 @@ function displayEpisodes(seasons){
 function startMovie(index){
     linkIndex = index;
     showLoading(false);
-    $('#frmMovie').show();
-    $('#frmMovie')[0].setAttribute('src',links[linkIndex].url);
+    if(links[linkIndex] !== undefined) {
+        $('#frmMovie').show();
+        $('#frmMovie')[0].setAttribute('src', links[linkIndex].url);
+    } else{
+        $('#movieList').html('<h2>Something went wrong, we\'re so so sorry</h2>').show(400);
+    }
 }
 
 function nextMovie(){

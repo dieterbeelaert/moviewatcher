@@ -52,6 +52,8 @@ MovieController.prototype.doSearch = function(){
                     console.log(toReturn);
                     self.prototype.returnJSON(toReturn);
                 } else{
+                    var toReturn = [];
+                    self.prototype.returnJSON(toReturn);
                     console.log(errors);
                 }
             }
