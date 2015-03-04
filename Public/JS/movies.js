@@ -66,11 +66,13 @@ function showMovies(json){
     if(json.length > 0) {
         for (var i = 0; i < json.length; i++) {
             var toAppend = '<div clas="row">';
-            toAppend = '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
+            //toAppend = '<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">';
+            toAppend = '<div style="text-align:center" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">';
             var id = json[i].link + '';
             id = id.replace('http://www.primewire.ag', '');
-            toAppend += '<a href="#" movieId="' + id + '" class="movieItem">'
-            toAppend += '<img src="' + json[i].image + '"/></a>';
+            toAppend += '<a href="#" movieId="' + id + '" class="movieItem">';
+            toAppend += '<img style="width:75%" src="' + json[i].image + '"/><br/>';
+            toAppend += json[i].title + '</a>';
             toAppend += '</div>';
             toAppend += '</div>';
             $('#movieList').append(toAppend);

@@ -41,8 +41,10 @@ MovieController.prototype.doSearch = function(){
                     var links = $('.index_item a');
                     links = cleanupLinks(links);
                     var images = $('.index_item a img');
+                    var titles = cleanupTitles($('.index_item a h2').text());
                     for(var i = 0; i < links.length; i++){
                         var curMov = {};
+                        curMov.title = titles[i];
                         curMov.link = links[i];
                         if(images[i] !== undefined){
                             curMov.image = images[i].src;
@@ -68,6 +70,10 @@ function cleanupLinks(links){
         }
     }
     return toReturn;
+}
+
+function cleanupTitles(titleString){
+    return titleString.match(/[A-Z0-9\( \.\'\"]*\)/gi);
 }
 
 MovieController.prototype.doLinks = function(){
