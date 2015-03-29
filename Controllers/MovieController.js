@@ -26,6 +26,7 @@ MovieController.prototype.doRequest = function(){
     }
 }
 
+//TODO handle pagination .pagination is on page
 MovieController.prototype.doSearch = function(){
     var self = this;
     var query = self.prototype.ctx.routeObj.id;
@@ -38,21 +39,30 @@ MovieController.prototype.doSearch = function(){
             function (errors, window) {
                 if (!errors) {
                     $ = window.$;
-                    var links = $('.index_item a');
-                    links = cleanupLinks(links);
-                    var images = $('.index_item a img');
-                    var titles = cleanupTitles($('.index_item a h2').text());
-                    for(var i = 0; i < links.length; i++){
-                        var curMov = {};
-                        curMov.title = titles[i];
-                        curMov.link = links[i];
-                        if(images[i] !== undefined){
-                            curMov.image = images[i].src;
+                    toReturn = self.extractSearchResultsFromHtml($);
+                    if($('.pagination').length > 0){
+                        console.log("pagination...");
+                        //get links from other pages
+                        var otherPages = $('.pagination a');
+                        var numberOfPages = otherPages.length -1; // -1 because the last one is duplicated...
+                        var gatheredPages = 0;
+                        for(var i = 0; i < numberOfPages; i++){
+                            console.log(otherPages[i].href);
+                            self.getAditionalSearchResults(otherPages[i].href,function(results){
+                                //toReturn.concat(results);//this doesn't work, do it manually instead
+                                for(var j = 0 ; j < results.length; j++){
+                                    toReturn.push(results[j]);
+                                }
+                                gatheredPages++;
+                                if(gatheredPages === numberOfPages){
+                                    console.log('done');
+                                    self.prototype.returnJSON(toReturn);
+                                }
+                            });
                         }
-                        toReturn.push(curMov);
+                    }else {
+                        self.prototype.returnJSON(toReturn);
                     }
-                    console.log(toReturn);
-                    self.prototype.returnJSON(toReturn);
                 } else{
                     console.log(errors);
                     self.prototype.returnJSON(toReturn);
@@ -60,6 +70,36 @@ MovieController.prototype.doSearch = function(){
             }
         );
     }
+}
+
+MovieController.prototype.getAditionalSearchResults = function(url,callback){
+    var self = this;
+    jsdom.env(
+        url,
+        ["http://code.jquery.com/jquery.js"],
+        function(errors,window){
+            if(!errors){
+                callback(self.extractSearchResultsFromHtml(window.$));
+            }
+        });
+}
+
+MovieController.prototype.extractSearchResultsFromHtml = function($){
+    var toReturn = [];
+    var links = $('.index_item a');
+    links = cleanupLinks(links);
+    var images = $('.index_item a img');
+    var titles = cleanupTitles($('.index_item a h2').text());
+    for(var i = 0; i < links.length; i++){
+        var curMov = {};
+        curMov.title = titles[i];
+        curMov.link = links[i];
+        if(images[i] !== undefined){
+            curMov.image = images[i].src;
+        }
+        toReturn.push(curMov);
+    }
+    return toReturn;
 }
 
 function cleanupLinks(links){
