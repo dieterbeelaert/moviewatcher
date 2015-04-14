@@ -3,6 +3,7 @@
  */
 
 var Controller = require('./Controller.js');
+var Settings = require('../settings.json');
 var jsdom = require('jsdom');
 
 
@@ -163,6 +164,7 @@ MovieController.prototype.doLinks = function(){
                     }
 
                 });
+                toReturn.links = removeForbiddenLinks(toReturn.links);
                 self.prototype.returnJSON(toReturn);
             }else{
                 //tv show get seasons and series...
@@ -170,6 +172,19 @@ MovieController.prototype.doLinks = function(){
             }
         }
     );
+}
+
+function removeForbiddenLinks(links){
+    var toReturn = [];
+    for(var j = 0; j < links.length; j++) {
+        for (var i = 0; i < Settings.sitesToIgnore.length; i++) {
+            if(links[j].host.indexOf(Settings.sitesToIgnore[i]) === -1) {
+                toReturn.push(links[j]);
+            }
+        }
+    }
+    console.log(toReturn);
+    return toReturn;
 }
 
 

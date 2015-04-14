@@ -1,4 +1,5 @@
 {
     "indexPage" : "../Views/index.ejs",
-    "port": 3000
+    "port": 3000,
+    "sitesToIgnore":["bestreams.net"]
 }
