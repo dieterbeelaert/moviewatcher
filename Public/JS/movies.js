@@ -4,6 +4,9 @@
 
 var links = [];
 var linkIndex = 0;
+var currentSeries;
+var currentSeason;
+var currentEpisode;
 
 
 $(document).ready(function(){
@@ -13,9 +16,12 @@ $(document).ready(function(){
 function init(){
     $('#frmMovie').hide();
     $("#loading").hide();
+    $("#cntEpisodeControls").hide();
     $(document).on('click', '#btnSearch',doSearch);
     $(document).on('click', '.movieItem', getMovieLinks);
     $(document).on('click','#btnNext',nextMovie);
+    $(document).on('click','#btnNextEpisode',nextEpisode);
+    $(document).on('click','#btnPreviousEpisode',previousEpisode);
     $(document).on('keyup','input[name=txtMovie]',submitSearch);
     setSize();
     $(window).resize(setSize);
@@ -49,6 +55,7 @@ function doSearch(query){
     }else {
         alert('please type a query');
     }
+    currentSeries = undefined;
 }
 
 function submitSearch(e){
@@ -94,12 +101,16 @@ function getMovieLinks(movieId){
     }else{
         console.log('movieId is undefined');
         id = $(this).attr('movieId');
-        var val = id.replace('/','');
-        val = val.replace('/','-');
-        setQueryString('id',val );
+        setMovieIdInQueryString(id);
+        currentSeason = $(this).attr('season');
+        currentEpisode = $(this).attr('episode');
     }
 
     $('#movieList').hide();
+    getEpisodeLinks(id);
+}
+
+function getEpisodeLinks(id){
     showLoading(true);
     $.ajax({
         url:'/movie/links' + id,
@@ -110,9 +121,13 @@ function getMovieLinks(movieId){
             if(json.type === 'links'){
                 links = json.links;
                 startMovie(0);
+                if(currentSeries === undefined){
+                    $("#cntEpisodeControls").hide(200);
+                }
             }else if(json.type === 'episodes'){
-                console.log(json.seasons);
+                currentSeries = json.seasons;
                 displayEpisodes(json.seasons);
+                $("#cntEpisodeControls").show(200);
             }
 
         },
@@ -131,8 +146,9 @@ function displayEpisodes(seasons){
         toAppend += '<ul class="list-group">';
         for(var e = 0; e < seasons[s].episodes.length; e++){
             var id = seasons[s].episodes[e].url;
+            var epNumber = seasons[s].episodes[e].number.replace(/E/gi,'') -1;
             toAppend += '<li class="list-group-item">' + seasons[s].episodes[e].number;
-            toAppend += ' <a href="#" class="movieItem" movieId="' + id +'">';
+            toAppend += ' <a href="#" class="movieItem" movieId="' + id +'" season="'+s+'" episode="'+ epNumber +'">';
             toAppend += seasons[s].episodes[e].name + ' ';
             toAppend += '<small> ' + seasons[s].episodes[e].airdate + '</small></a></li>';
         }
@@ -192,6 +208,39 @@ function checkQueryString(){
             }
         }
     }
+}
+
+function nextEpisode(){
+    console.log(currentSeries);
+    if(currentEpisode + 1 < currentSeries[currentSeason].episodes.length){
+        currentEpisode++;
+    }else{
+        currentEpisode = 0;
+        if(currentSeason + 1 < currentSeries.length){
+            currentSeason++;
+        } else {
+            currentSeason = 0;
+        }
+    };
+    setMovieIdInQueryString(currentSeries[currentSeason].episodes[currentEpisode].url);
+    getEpisodeLinks(currentSeries[currentSeason].episodes[currentEpisode].url);
+}
+
+function previousEpisode(){
+    if(currentEpisode !== 0){
+        currentEpisode--;
+    }else if(currentSeason !== 0){
+        currentSeason--;
+        currentEpisode = currentSeries[currentSeason].episodes.length -1;
+    }
+    setMovieIdInQueryString(currentSeries[currentSeason].episodes[currentEpisode].url);
+    getEpisodeLinks(currentSeries[currentSeason].episodes[currentEpisode].url);
+}
+
+function setMovieIdInQueryString(url){
+    var val = url.replace('/','');
+    val = val.replace('/','-');
+    setQueryString('id',val );
 }
 
 function setQueryString(key,value){
