@@ -200,10 +200,30 @@ function checkQueryString(){
         var values = queryString.match(/=[a-z\-[0-9]*]*/gi);
         for(var i = 0; i < keys.length; i++){
             key = keys[i].replace('=','');
+            var id = values[i].replace('=','')
             switch(key.toUpperCase()){
-                case 'SEARCH': doSearch(values[i].replace('=',''));
+                case 'SEARCH': doSearch(id);
                     break;
-                case 'ID': getMovieLinks(values[i].replace('=',''));
+                case 'ID':
+                    //if it's an episode of a series we need to get the other episodes JSON + display controls
+                    if(id.indexOf('season') !== -1 && id.indexOf('episode') !== -1){
+                        //fill currentSeries
+                        var seriesID = id.replace(/-season-[0-9]?-episode-[0-9]?/gi,'');
+                        currentSeason = id.match(/-season-([0-9]?)/i)[0].replace(/[a-z]*\-*/gi,'') -1;
+                        currentEpisode = id.match(/-episode-([0-9]?)/i)[0].replace(/[a-z]*\-*/gi,'')-1;
+                        $.ajax({
+                            url: '/movie/links/'+seriesID,
+                            success:function(json){
+                                currentSeries = JSON.parse(json).seasons;
+                                $('#cntEpisodeControls').show(200);
+                            },
+                            error: function(err){
+                                console.log(err);
+                            }
+
+                        })
+                    }
+                    getMovieLinks(id);
                     break;
             }
         }
