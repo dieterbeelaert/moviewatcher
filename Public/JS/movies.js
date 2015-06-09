@@ -56,6 +56,7 @@ function doSearch(query){
         alert('please type a query');
     }
     currentSeries = undefined;
+    $("#cntEpisodeControls").hide(200);
 }
 
 function submitSearch(e){
