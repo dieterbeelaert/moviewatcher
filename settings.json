@@ -1,5 +1,5 @@
 {
     "indexPage" : "../Views/index.ejs",
     "port": 3000,
-    "sitesToIgnore":["bestreams.net"]
+    "sitesToIgnore":["bestreams.net","stagevu.com"]
 }
