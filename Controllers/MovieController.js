@@ -93,12 +93,14 @@ MovieController.prototype.extractSearchResultsFromHtml = function($){
     var titles = cleanupTitles($('.index_item a h2').text());
     for(var i = 0; i < links.length; i++){
         var curMov = {};
-        curMov.title = titles[i];
-        curMov.link = links[i];
-        if(images[i] !== undefined){
-            curMov.image = images[i].src;
+        if(titles[i] != undefined) {
+            curMov.title = titles[i];
+            curMov.link = links[i];
+            if (images[i] !== undefined) {
+                curMov.image = images[i].src;
+            }
+            toReturn.push(curMov);
         }
-        toReturn.push(curMov);
     }
     return toReturn;
 }
